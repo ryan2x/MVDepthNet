@@ -12,6 +12,8 @@ from torch import Tensor
 from depthNet_model import depthNet
 from visualize import *
 
+flag_display = False
+
 with open('sample_data.pkl', 'rb') as fp:
     sample_datas = pickle.load(fp)
 
@@ -29,8 +31,9 @@ pixel_coordinate = np.concatenate(
     (pixel_coordinate, np.ones([1, 320, 256])), axis=0)
 pixel_coordinate = np.reshape(pixel_coordinate, [3, -1])
 
-cv2.namedWindow('result')
-cv2.moveWindow('result', 200, 200)
+if flag_display:
+    cv2.namedWindow('result')
+    cv2.moveWindow('result', 200, 200)
 
 for this_sample in sample_datas:
 
@@ -74,6 +77,10 @@ for this_sample in sample_datas:
     np_depth = np2Depth(idepth, np.zeros(invalid_mask.shape, dtype=bool))
     result_image = np.concatenate(
         (np_left, np_right, np_gtdepth, np_depth), axis=1)
-    cv2.imshow("result", result_image)
-    if cv2.waitKey(1000) == 27:
-        break
+
+    if flag_display:
+        cv2.imshow("result", result_image)
+        if cv2.waitKey(1000) == 27:
+            break
+    else:
+        cv2.imwrite('result-image.png', result_image)

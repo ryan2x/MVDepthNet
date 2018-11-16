@@ -1,4 +1,6 @@
 /.vscode
+/.idea/
 *.pyc
 *.pth.tar
 *.pkl
+__pycache__/
